@@ -28,6 +28,10 @@ import xmlrpclib
 
 def create(server, session_id, account, app_name, extra_info):
     """create the app"""
+    if not (extra_info.startswith('http://') or 
+            extra_info.startswith('https://')):
+        print 'Extra info must contain a valid HTTP or HTTPS URL, try again.'
+        return
     app = server.create_app(session_id, app_name, 'static', False, '')
     htaccess_path = '%s/%s/webapps/%s/.htaccess' % (account['home'], 
                                                     account['username'],
