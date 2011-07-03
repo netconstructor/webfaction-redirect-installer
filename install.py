@@ -1,4 +1,3 @@
------BEGIN WEBFACTION INSTALL SCRIPT-----
 #!/bin/env python2.7
 """
 Redirect app
@@ -62,4 +61,3 @@ if __name__ == '__main__':
         main(*sys.argv[1:])
     except xmlrpclib.Fault, e:
         print e.faultString
------END WEBFACTION INSTALL SCRIPT-----
