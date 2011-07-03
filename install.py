@@ -1,0 +1,65 @@
+-----BEGIN WEBFACTION INSTALL SCRIPT-----
+#!/bin/env python2.7
+"""
+Redirect app
+
+This creates a static app with a .htaccess file that does a redirect to the URL
+that you specify in the 'extra info' field.
+
+The generated .htaccess will look like this:
+
+    Options +FollowSymLinks
+    RewriteEngine on
+    RewriteRule ^(.*)$ http://destination.com/$1 [R=301,L]
+
+Add this app to a site that uses the domains that you want to redirect to the
+destination domain.
+
+The app cannot be modified in the control panel after it has been created. If
+you need to change the redirect, then edit the .htacess file directly, or
+delete this redirect app and create a new one.
+
+"autostart": "not applicable"
+"extra info": "The destination URL, eg http://destination.com/"
+"""
+
+import sys
+import xmlrpclib
+
+def create(server, session_id, account, app_name, extra_info):
+    """create the app"""
+    if not (extra_info.startswith('http://') or 
+            extra_info.startswith('https://')):
+        print 'Extra info must contain a valid HTTP or HTTPS URL, try again.'
+        return
+    app = server.create_app(session_id, app_name, 'static', False, '')
+    htaccess_path = '%s/%s/webapps/%s/.htaccess' % (account['home'], 
+                                                    account['username'],
+                                                    app_name)
+    htaccess_contents = """
+Options +FollowSymLinks
+RewriteEngine on
+RewriteRule ^(.*)$ %s$1 [R=301,L]""".strip() % (extra_info,)
+    htaccess = server.write_file(session_id, htaccess_path, 
+                                 htaccess_contents, 'w')
+    print app['id']
+
+
+def delete(server, session_id, account, app_name, extra_info):
+    """delete the app"""
+    server.delete_app(session_id, app_name)
+
+
+def main(action, username, password, machine, app_name, autostart, extra_info):
+    server = xmlrpclib.Server('https://api.webfaction.com/')
+    session_id, account = server.login(username, password, machine)
+
+    # create or delete the app
+    globals()[action](server, session_id, account, app_name, extra_info)
+
+if __name__ == '__main__':
+    try:
+        main(*sys.argv[1:])
+    except xmlrpclib.Fault, e:
+        print e.faultString
+-----END WEBFACTION INSTALL SCRIPT-----
