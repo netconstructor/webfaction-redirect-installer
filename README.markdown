@@ -1,7 +1,7 @@
 Redirect app install script for WebFaction
 ==========================================
 
-[Click here to install](https://my.webfaction.com/app/create?script_url=https://raw.github.com/wsfulmer/webfaction-redirect-installer/master/install)
+[Click here to install][1]
 
 This creates a static app with a .htaccess file that does a redirect to the URL
 that you specify in the 'extra info' field.
@@ -20,3 +20,4 @@ you need to change the redirect, then edit the .htacess file directly, or
 delete this redirect app and create a new one.
 
 
+ [1]:https://my.webfaction.com/app/create?script_url=https://raw.github.com/wsfulmer/webfaction-redirect-installer/master/install)
